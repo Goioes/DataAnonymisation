@@ -1,0 +1,1236 @@
+{
+  "benchmark": "benchmark_extra",
+  "model": "GLiNER",
+  "scored_at": "2026-11-08T21:10:40",
+  "examples": 10,
+  "labels": {
+    "PERSON": {
+      "support": 10,
+      "predicted": 10,
+      "tp": 10,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "f2": 1.0
+    },
+    "ORG": {
+      "support": 8,
+      "predicted": 7,
+      "tp": 7,
+      "precision": 1.0,
+      "recall": 0.875,
+      "f1": 0.9333333333333333,
+      "f2": 0.8974358974358975
+    },
+    "JOB": {
+      "support": 6,
+      "predicted": 7,
+      "tp": 6,
+      "precision": 0.8571428571428571,
+      "recall": 1.0,
+      "f1": 0.923076923076923,
+      "f2": 0.9677419354838709
+    },
+    "EMAIL_ADDRESS": {
+      "support": 4,
+      "predicted": 4,
+      "tp": 4,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "f2": 1.0
+    },
+    "LOCATION": {
+      "support": 6,
+      "predicted": 7,
+      "tp": 6,
+      "precision": 0.8571428571428571,
+      "recall": 1.0,
+      "f1": 0.923076923076923,
+      "f2": 0.9677419354838709
+    },
+    "AMOUNT": {
+      "support": 5,
+      "predicted": 5,
+      "tp": 5,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "f2": 1.0
+    },
+    "DATE_TIME": {
+      "support": 13,
+      "predicted": 11,
+      "tp": 10,
+      "precision": 0.9090909090909091,
+      "recall": 0.7692307692307693,
+      "f1": 0.8333333333333333,
+      "f2": 0.7936507936507935
+    },
+    "UNIVERSITY": {
+      "support": 3,
+      "predicted": 3,
+      "tp": 3,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "f2": 1.0
+    },
+    "PHONE_NUMBER": {
+      "support": 3,
+      "predicted": 5,
+      "tp": 3,
+      "precision": 0.6,
+      "recall": 1.0,
+      "f1": 0.7499999999999999,
+      "f2": 0.8823529411764706
+    },
+    "URL": {
+      "support": 3,
+      "predicted": 2,
+      "tp": 2,
+      "precision": 1.0,
+      "recall": 0.6666666666666666,
+      "f1": 0.8,
+      "f2": 0.7142857142857142
+    },
+    "IBAN": {
+      "support": 3,
+      "predicted": 3,
+      "tp": 2,
+      "precision": 0.6666666666666666,
+      "recall": 0.6666666666666666,
+      "f1": 0.6666666666666666,
+      "f2": 0.6666666666666666
+    },
+    "SSN": {
+      "support": 3,
+      "predicted": 1,
+      "tp": 1,
+      "precision": 1.0,
+      "recall": 0.3333333333333333,
+      "f1": 0.5,
+      "f2": 0.3846153846153846
+    },
+    "USERNAME": {
+      "support": 3,
+      "predicted": 4,
+      "tp": 3,
+      "precision": 0.75,
+      "recall": 1.0,
+      "f1": 0.8571428571428571,
+      "f2": 0.9375
+    },
+    "PASSWORD": {
+      "support": 2,
+      "predicted": 3,
+      "tp": 2,
+      "precision": 0.6666666666666666,
+      "recall": 1.0,
+      "f1": 0.8,
+      "f2": 0.9090909090909091
+    }
+  },
+  "micro": {
+    "support": 72,
+    "predicted": 72,
+    "tp": 64,
+    "precision": 0.8888888888888888,
+    "recall": 0.8888888888888888,
+    "f1": 0.8888888888888888,
+    "f2": 0.8888888888888888
+  },
+  "global": {
+    "support": 70,
+    "predicted": 70,
+    "tp": 66,
+    "precision": 0.9428571428571428,
+    "recall": 0.9428571428571428,
+    "f1": 0.9428571428571428,
+    "f2": 0.942857142857143
+  },
+  "errors": [
+    {
+      "example": 1,
+      "type": "FN",
+      "gold": "DATE_TIME",
+      "predicted": "O",
+      "text": "2012 - 2017"
+    },
+    {
+      "example": 1,
+      "type": "FN",
+      "gold": "DATE_TIME",
+      "predicted": "O",
+      "text": "maart 2019"
+    },
+    {
+      "example": 1,
+      "type": "WrongEntity",
+      "gold": "URL",
+      "predicted": "USERNAME",
+      "text": "https://www.linkedin.com/in/jeroenpeeters-pm"
+    },
+    {
+      "example": 1,
+      "type": "FN",
+      "gold": "URL",
+      "predicted": "O",
+      "text": "https://www.linkedin.com/in/jeroenpeeters-pm"
+    },
+    {
+      "example": 1,
+      "type": "FP",
+      "gold": "O",
+      "predicted": "USERNAME",
+      "text": "https://www.linkedin.com/in/jeroenpeeters-pm"
+    },
+    {
+      "example": 1,
+      "type": "WrongEntity",
+      "gold": "SSN",
+      "predicted": "PHONE_NUMBER",
+      "text": "90.01.15 - 123.45"
+    },
+    {
+      "example": 1,
+      "type": "FN",
+      "gold": "SSN",
+      "predicted": "O",
+      "text": "90.01.15 - 123.45"
+    },
+    {
+      "example": 1,
+      "type": "FP",
+      "gold": "O",
+      "predicted": "PHONE_NUMBER",
+      "text": "90.01.15 - 123.45"
+    },
+    {
+      "example": 2,
+      "type": "WrongEntity",
+      "gold": "ORG",
+      "predicted": "LOCATION",
+      "text": "Gemeente Zottegem"
+    },
+    {
+      "example": 2,
+      "type": "FN",
+      "gold": "ORG",
+      "predicted": "O",
+      "text": "Gemeente Zottegem"
+    },
+    {
+      "example": 2,
+      "type": "FP",
+      "gold": "O",
+      "predicted": "LOCATION",
+      "text": "Gemeente Zottegem"
+    },
+    {
+      "example": 3,
+      "type": "FN",
+      "gold": "DATE_TIME",
+      "predicted": "O",
+      "text": "maandag 3 maart"
+    },
+    {
+      "example": 3,
+      "type": "FP",
+      "gold": "O",
+      "predicted": "DATE_TIME",
+      "text": "3 maart"
+    },
+    {
+      "example": 6,
+      "type": "FN",
+      "gold": "SSN",
+      "predicted": "O",
+      "text": "78.11.23 - 456.78"
+    },
+    {
+      "example": 6,
+      "type": "FN",
+      "gold": "IBAN",
+      "predicted": "O",
+      "text": "FR76 3000 6000 0112 3456 7890 189"
+    },
+    {
+      "example": 6,
+      "type": "FP",
+      "gold": "O",
+      "predicted": "IBAN",
+      "text": "FR76 3000 6000"
+    },
+    {
+      "example": 6,
+      "type": "WrongEntity",
+      "gold": "IBAN",
+      "predicted": "PHONE_NUMBER",
+      "text": "FR76 3000 6000 0112 3456 7890 189"
+    },
+    {
+      "example": 6,
+      "type": "FP",
+      "gold": "O",
+      "predicted": "PHONE_NUMBER",
+      "text": "0112 3456 7890 189"
+    },
+    {
+      "example": 8,
+      "type": "FP",
+      "gold": "O",
+      "predicted": "JOB",
+      "text": "Finance"
+    },
+    {
+      "example": 8,
+      "type": "FP",
+      "gold": "O",
+      "predicted": "PASSWORD",
+      "text": "login"
+    }
+  ],
+  "details": [
+    {
+      "text": "Beste Lotte Vermeulen, hierbij de bevestiging van uw sollicitatie als Data Analyst bij Brouwerij Van Damme NV. Het gesprek vindt plaats op dinsdag 14 januari 2025 om 10.30 uur in ons kantoor in Mechelen. Bevestig uw aanwezigheid via recruitment@vandamme-brouwerij.be of bel 015 45 67 89.",
+      "gold": [
+        {
+          "text": "Lotte Vermeulen",
+          "label": "PERSON",
+          "start": 6,
+          "end": 21
+        },
+        {
+          "text": "Data Analyst",
+          "label": "JOB",
+          "start": 70,
+          "end": 82
+        },
+        {
+          "text": "Brouwerij Van Damme NV",
+          "label": "ORG",
+          "start": 87,
+          "end": 109
+        },
+        {
+          "text": "dinsdag 14 januari 2025 om 10.30 uur",
+          "label": "DATE_TIME",
+          "start": 139,
+          "end": 175
+        },
+        {
+          "text": "Mechelen",
+          "label": "LOCATION",
+          "start": 194,
+          "end": 202
+        },
+        {
+          "text": "recruitment@vandamme-brouwerij.be",
+          "label": "EMAIL_ADDRESS",
+          "start": 233,
+          "end": 266
+        },
+        {
+          "text": "015 45 67 89",
+          "label": "PHONE_NUMBER",
+          "start": 274,
+          "end": 286
+        }
+      ],
+      "predicted": [
+        {
+          "text": "Lotte Vermeulen",
+          "label": "PERSON",
+          "start": 6,
+          "end": 21
+        },
+        {
+          "text": "Data Analyst",
+          "label": "JOB",
+          "start": 70,
+          "end": 82
+        },
+        {
+          "text": "Brouwerij Van Damme NV",
+          "label": "ORG",
+          "start": 87,
+          "end": 109
+        },
+        {
+          "text": "dinsdag 14 januari 2025",
+          "label": "DATE_TIME",
+          "start": 139,
+          "end": 162
+        },
+        {
+          "text": "Mechelen",
+          "label": "LOCATION",
+          "start": 194,
+          "end": 202
+        },
+        {
+          "text": "recruitment@vandamme-brouwerij.be",
+          "label": "EMAIL_ADDRESS",
+          "start": 233,
+          "end": 266
+        },
+        {
+          "text": "015 45 67 89",
+          "label": "PHONE_NUMBER",
+          "start": 274,
+          "end": 286
+        }
+      ]
+    },
+    {
+      "text": "Curriculum vitae van Jeroen Peeters. Master in de Informatica aan de KU Leuven (2012-2017). Sinds maart 2019 werkt hij als Projectmanager bij Delhaize Le Lion in Brussel. Zijn LinkedIn-profiel staat op https://www.linkedin.com/in/jeroenpeeters-pm en zijn rijksregisternummer is 90.01.15-123.45.",
+      "gold": [
+        {
+          "text": "Jeroen Peeters",
+          "label": "PERSON",
+          "start": 21,
+          "end": 35
+        },
+        {
+          "text": "KU Leuven",
+          "label": "UNIVERSITY",
+          "start": 69,
+          "end": 78
+        },
+        {
+          "text": "2012-2017",
+          "label": "DATE_TIME",
+          "start": 80,
+          "end": 89
+        },
+        {
+          "text": "maart 2019",
+          "label": "DATE_TIME",
+          "start": 98,
+          "end": 108
+        },
+        {
+          "text": "Projectmanager",
+          "label": "JOB",
+          "start": 123,
+          "end": 137
+        },
+        {
+          "text": "Delhaize Le Lion",
+          "label": "ORG",
+          "start": 142,
+          "end": 158
+        },
+        {
+          "text": "Brussel",
+          "label": "LOCATION",
+          "start": 162,
+          "end": 169
+        },
+        {
+          "text": "https://www.linkedin.com/in/jeroenpeeters-pm",
+          "label": "URL",
+          "start": 202,
+          "end": 246
+        },
+        {
+          "text": "90.01.15-123.45",
+          "label": "SSN",
+          "start": 278,
+          "end": 293
+        }
+      ],
+      "predicted": [
+        {
+          "text": "Jeroen Peeters",
+          "label": "PERSON",
+          "start": 21,
+          "end": 35
+        },
+        {
+          "text": "KU Leuven",
+          "label": "UNIVERSITY",
+          "start": 69,
+          "end": 78
+        },
+        {
+          "text": "Projectmanager",
+          "label": "JOB",
+          "start": 123,
+          "end": 137
+        },
+        {
+          "text": "Delhaize Le Lion",
+          "label": "ORG",
+          "start": 142,
+          "end": 158
+        },
+        {
+          "text": "Brussel",
+          "label": "LOCATION",
+          "start": 162,
+          "end": 169
+        },
+        {
+          "text": "jeroenpeeters-pm",
+          "label": "USERNAME",
+          "start": 230,
+          "end": 246
+        },
+        {
+          "text": "90.01.15-123.45",
+          "label": "PHONE_NUMBER",
+          "start": 278,
+          "end": 293
+        }
+      ]
+    },
+    {
+      "text": "Factuur 2025-0187 van Bouwbedrijf Janssens BVBA aan Gemeente Zottegem. Totaalbedrag: € 12.450,00 incl. btw, te betalen vóór 28 februari 2025 op rekeningnummer BE68 5390 0754 7034 met vermelding van het factuurnummer.",
+      "gold": [
+        {
+          "text": "Bouwbedrijf Janssens BVBA",
+          "label": "ORG",
+          "start": 22,
+          "end": 47
+        },
+        {
+          "text": "Gemeente Zottegem",
+          "label": "ORG",
+          "start": 52,
+          "end": 69
+        },
+        {
+          "text": "€ 12.450,00",
+          "label": "AMOUNT",
+          "start": 85,
+          "end": 96
+        },
+        {
+          "text": "28 februari 2025",
+          "label": "DATE_TIME",
+          "start": 124,
+          "end": 140
+        },
+        {
+          "text": "BE68 5390 0754 7034",
+          "label": "IBAN",
+          "start": 159,
+          "end": 178
+        }
+      ],
+      "predicted": [
+        {
+          "text": "Bouwbedrijf Janssens BVBA",
+          "label": "ORG",
+          "start": 22,
+          "end": 47
+        },
+        {
+          "text": "Gemeente Zottegem",
+          "label": "LOCATION",
+          "start": 52,
+          "end": 69
+        },
+        {
+          "text": "€ 12.450,00",
+          "label": "AMOUNT",
+          "start": 85,
+          "end": 96
+        },
+        {
+          "text": "28 februari 2025",
+          "label": "DATE_TIME",
+          "start": 124,
+          "end": 140
+        },
+        {
+          "text": "BE68 5390 0754 7034",
+          "label": "IBAN",
+          "start": 159,
+          "end": 178
+        }
+      ]
+    },
+    {
+      "text": "Hoi Sarah, je account voor het HR-portaal is aangemaakt en actief vanaf maandag 3 maart. Gebruikersnaam: s.dekeyser en tijdelijk wachtwoord: Zomer!2025x. Je moet dit wijzigen bij je eerste login. Vragen? Stuur een bericht naar helpdesk@voorbeeld-hr.be.",
+      "gold": [
+        {
+          "text": "Sarah",
+          "label": "PERSON",
+          "start": 4,
+          "end": 9
+        },
+        {
+          "text": "maandag 3 maart",
+          "label": "DATE_TIME",
+          "start": 72,
+          "end": 87
+        },
+        {
+          "text": "s.dekeyser",
+          "label": "USERNAME",
+          "start": 105,
+          "end": 115
+        },
+        {
+          "text": "Zomer!2025x",
+          "label": "PASSWORD",
+          "start": 141,
+          "end": 152
+        },
+        {
+          "text": "helpdesk@voorbeeld-hr.be",
+          "label": "EMAIL_ADDRESS",
+          "start": 227,
+          "end": 251
+        }
+      ],
+      "predicted": [
+        {
+          "text": "Sarah",
+          "label": "PERSON",
+          "start": 4,
+          "end": 9
+        },
+        {
+          "text": "3 maart",
+          "label": "DATE_TIME",
+          "start": 80,
+          "end": 87
+        },
+        {
+          "text": "s.dekeyser",
+          "label": "USERNAME",
+          "start": 105,
+          "end": 115
+        },
+        {
+          "text": "Zomer!2025x",
+          "label": "PASSWORD",
+          "start": 141,
+          "end": 152
+        },
+        {
+          "text": "helpdesk@voorbeeld-hr.be",
+          "label": "EMAIL_ADDRESS",
+          "start": 227,
+          "end": 251
+        }
+      ]
+    },
+    {
+      "text": "Entre la société Transports Lambert SPRL, dont le siège est situé Rue de la Station 45, 4000 Liège, et Madame Claire Dubois, il est convenu que cette dernière occupera le poste de Responsable logistique à partir du 1er septembre 2025, pour une rémunération mensuelle brute de 3.850 euros.",
+      "gold": [
+        {
+          "text": "Transports Lambert SPRL",
+          "label": "ORG",
+          "start": 17,
+          "end": 40
+        },
+        {
+          "text": "Rue de la Station 45, 4000 Liège",
+          "label": "LOCATION",
+          "start": 66,
+          "end": 98
+        },
+        {
+          "text": "Claire Dubois",
+          "label": "PERSON",
+          "start": 110,
+          "end": 123
+        },
+        {
+          "text": "Responsable logistique",
+          "label": "JOB",
+          "start": 180,
+          "end": 202
+        },
+        {
+          "text": "1er septembre 2025",
+          "label": "DATE_TIME",
+          "start": 215,
+          "end": 233
+        },
+        {
+          "text": "3.850 euros",
+          "label": "AMOUNT",
+          "start": 276,
+          "end": 287
+        }
+      ],
+      "predicted": [
+        {
+          "text": "Transports Lambert SPRL",
+          "label": "ORG",
+          "start": 17,
+          "end": 40
+        },
+        {
+          "text": "Rue de la Station 45",
+          "label": "LOCATION",
+          "start": 66,
+          "end": 86
+        },
+        {
+          "text": "4000 Liège",
+          "label": "LOCATION",
+          "start": 88,
+          "end": 98
+        },
+        {
+          "text": "Madame Claire Dubois",
+          "label": "PERSON",
+          "start": 103,
+          "end": 123
+        },
+        {
+          "text": "Responsable logistique",
+          "label": "JOB",
+          "start": 180,
+          "end": 202
+        },
+        {
+          "text": "1er septembre 2025",
+          "label": "DATE_TIME",
+          "start": 215,
+          "end": 233
+        },
+        {
+          "text": "3.850 euros",
+          "label": "AMOUNT",
+          "start": 276,
+          "end": 287
+        }
+      ]
+    },
+    {
+      "text": "Bonjour, je m'appelle Nathalie Martin, ingénieure chez Orange à Lyon depuis 2021. Je suis diplômée de l'Université de Lausanne. Vous pouvez me joindre au +33 6 12 34 56 78 ou par e-mail à nathalie.martin@exemple-conseil.fr.",
+      "gold": [
+        {
+          "text": "Nathalie Martin",
+          "label": "PERSON",
+          "start": 22,
+          "end": 37
+        },
+        {
+          "text": "ingénieure",
+          "label": "JOB",
+          "start": 39,
+          "end": 49
+        },
+        {
+          "text": "Orange",
+          "label": "ORG",
+          "start": 55,
+          "end": 61
+        },
+        {
+          "text": "Lyon",
+          "label": "LOCATION",
+          "start": 64,
+          "end": 68
+        },
+        {
+          "text": "2021",
+          "label": "DATE_TIME",
+          "start": 76,
+          "end": 80
+        },
+        {
+          "text": "Université de Lausanne",
+          "label": "UNIVERSITY",
+          "start": 104,
+          "end": 126
+        },
+        {
+          "text": "+33 6 12 34 56 78",
+          "label": "PHONE_NUMBER",
+          "start": 154,
+          "end": 171
+        },
+        {
+          "text": "nathalie.martin@exemple-conseil.fr",
+          "label": "EMAIL_ADDRESS",
+          "start": 188,
+          "end": 222
+        }
+      ],
+      "predicted": [
+        {
+          "text": "Nathalie Martin",
+          "label": "PERSON",
+          "start": 22,
+          "end": 37
+        },
+        {
+          "text": "ingénieure",
+          "label": "JOB",
+          "start": 39,
+          "end": 49
+        },
+        {
+          "text": "Orange",
+          "label": "ORG",
+          "start": 55,
+          "end": 61
+        },
+        {
+          "text": "Lyon",
+          "label": "LOCATION",
+          "start": 64,
+          "end": 68
+        },
+        {
+          "text": "2021",
+          "label": "DATE_TIME",
+          "start": 76,
+          "end": 80
+        },
+        {
+          "text": "Université de Lausanne",
+          "label": "UNIVERSITY",
+          "start": 104,
+          "end": 126
+        },
+        {
+          "text": "+33 6 12 34 56 78",
+          "label": "PHONE_NUMBER",
+          "start": 154,
+          "end": 171
+        },
+        {
+          "text": "nathalie.martin@exemple-conseil.fr",
+          "label": "EMAIL_ADDRESS",
+          "start": 188,
+          "end": 222
+        }
+      ]
+    },
+    {
+      "text": "Client: Je m'appelle Marc Vanhove et j'ai perdu l'accès à mon espace sur www.mutualite-exemple.be. Mon identifiant est mvanhove78, mon mot de passe actuel est Chat!Noir42 et mon numéro de registre national est 78.11.23-456.78. Pouvez-vous rembourser 215,50 € sur le compte FR76 3000 6000 0112 3456 7890 189 avant le 15 mars?",
+      "gold": [
+        {
+          "text": "Marc Vanhove",
+          "label": "PERSON",
+          "start": 21,
+          "end": 33
+        },
+        {
+          "text": "www.mutualite-exemple.be",
+          "label": "URL",
+          "start": 73,
+          "end": 97
+        },
+        {
+          "text": "mvanhove78",
+          "label": "USERNAME",
+          "start": 119,
+          "end": 129
+        },
+        {
+          "text": "Chat!Noir42",
+          "label": "PASSWORD",
+          "start": 159,
+          "end": 170
+        },
+        {
+          "text": "78.11.23-456.78",
+          "label": "SSN",
+          "start": 210,
+          "end": 225
+        },
+        {
+          "text": "215,50 €",
+          "label": "AMOUNT",
+          "start": 250,
+          "end": 258
+        },
+        {
+          "text": "FR76 3000 6000 0112 3456 7890 189",
+          "label": "IBAN",
+          "start": 273,
+          "end": 306
+        },
+        {
+          "text": "15 mars",
+          "label": "DATE_TIME",
+          "start": 316,
+          "end": 323
+        }
+      ],
+      "predicted": [
+        {
+          "text": "Marc Vanhove",
+          "label": "PERSON",
+          "start": 21,
+          "end": 33
+        },
+        {
+          "text": "www.mutualite-exemple.be",
+          "label": "URL",
+          "start": 73,
+          "end": 97
+        },
+        {
+          "text": "mvanhove78",
+          "label": "USERNAME",
+          "start": 119,
+          "end": 129
+        },
+        {
+          "text": "Chat!Noir42",
+          "label": "PASSWORD",
+          "start": 159,
+          "end": 170
+        },
+        {
+          "text": "215,50 €",
+          "label": "AMOUNT",
+          "start": 250,
+          "end": 258
+        },
+        {
+          "text": "FR76 3000 6000",
+          "label": "IBAN",
+          "start": 273,
+          "end": 287
+        },
+        {
+          "text": "0112 3456 7890 189",
+          "label": "PHONE_NUMBER",
+          "start": 288,
+          "end": 306
+        },
+        {
+          "text": "15 mars",
+          "label": "DATE_TIME",
+          "start": 316,
+          "end": 323
+        }
+      ]
+    },
+    {
+      "text": "Dear Priya Nair, we are pleased to offer you the position of Senior HR Business Partner at Northbridge Consulting Ltd, based in Manchester. Your gross annual salary will be £58,000 and your start date is 6 October 2025. Please sign and return the contract by Friday. Questions? Call Helen on 0161 496 0123.",
+      "gold": [
+        {
+          "text": "Priya Nair",
+          "label": "PERSON",
+          "start": 5,
+          "end": 15
+        },
+        {
+          "text": "Senior HR Business Partner",
+          "label": "JOB",
+          "start": 61,
+          "end": 87
+        },
+        {
+          "text": "Northbridge Consulting Ltd",
+          "label": "ORG",
+          "start": 91,
+          "end": 117
+        },
+        {
+          "text": "Manchester",
+          "label": "LOCATION",
+          "start": 128,
+          "end": 138
+        },
+        {
+          "text": "£58,000",
+          "label": "AMOUNT",
+          "start": 173,
+          "end": 180
+        },
+        {
+          "text": "6 October 2025",
+          "label": "DATE_TIME",
+          "start": 204,
+          "end": 218
+        },
+        {
+          "text": "Friday",
+          "label": "DATE_TIME",
+          "start": 259,
+          "end": 265
+        },
+        {
+          "text": "Helen",
+          "label": "PERSON",
+          "start": 283,
+          "end": 288
+        },
+        {
+          "text": "0161 496 0123",
+          "label": "PHONE_NUMBER",
+          "start": 292,
+          "end": 305
+        }
+      ],
+      "predicted": [
+        {
+          "text": "Priya Nair",
+          "label": "PERSON",
+          "start": 5,
+          "end": 15
+        },
+        {
+          "text": "Senior HR Business Partner",
+          "label": "JOB",
+          "start": 61,
+          "end": 87
+        },
+        {
+          "text": "Northbridge Consulting Ltd",
+          "label": "ORG",
+          "start": 91,
+          "end": 117
+        },
+        {
+          "text": "Manchester",
+          "label": "LOCATION",
+          "start": 128,
+          "end": 138
+        },
+        {
+          "text": "£58,000",
+          "label": "AMOUNT",
+          "start": 173,
+          "end": 180
+        },
+        {
+          "text": "6 October 2025",
+          "label": "DATE_TIME",
+          "start": 204,
+          "end": 218
+        },
+        {
+          "text": "Friday",
+          "label": "DATE_TIME",
+          "start": 259,
+          "end": 265
+        },
+        {
+          "text": "Helen",
+          "label": "PERSON",
+          "start": 283,
+          "end": 288
+        },
+        {
+          "text": "0161 496 0123",
+          "label": "PHONE_NUMBER",
+          "start": 292,
+          "end": 305
+        }
+      ]
+    },
+    {
+      "text": "Hi team, quick reminder that Daniel Foster from Finance will present the quarterly results tomorrow at 2 pm in the Antwerp office. Revenue came in at 2.4 million euros. Please do not share the login for the dashboard (user: dfoster_fin) outside the team. Slides are at https://intranet.example.com/results.",
+      "gold": [
+        {
+          "text": "Daniel Foster",
+          "label": "PERSON",
+          "start": 29,
+          "end": 42
+        },
+        {
+          "text": "tomorrow at 2 pm",
+          "label": "DATE_TIME",
+          "start": 91,
+          "end": 107
+        },
+        {
+          "text": "Antwerp",
+          "label": "LOCATION",
+          "start": 115,
+          "end": 122
+        },
+        {
+          "text": "2.4 million euros",
+          "label": "AMOUNT",
+          "start": 150,
+          "end": 167
+        },
+        {
+          "text": "dfoster_fin",
+          "label": "USERNAME",
+          "start": 224,
+          "end": 235
+        },
+        {
+          "text": "https://intranet.example.com/results",
+          "label": "URL",
+          "start": 269,
+          "end": 305
+        }
+      ],
+      "predicted": [
+        {
+          "text": "Daniel Foster",
+          "label": "PERSON",
+          "start": 29,
+          "end": 42
+        },
+        {
+          "text": "Finance",
+          "label": "JOB",
+          "start": 48,
+          "end": 55
+        },
+        {
+          "text": "tomorrow",
+          "label": "DATE_TIME",
+          "start": 91,
+          "end": 99
+        },
+        {
+          "text": "Antwerp",
+          "label": "LOCATION",
+          "start": 115,
+          "end": 122
+        },
+        {
+          "text": "2.4 million euros",
+          "label": "AMOUNT",
+          "start": 150,
+          "end": 167
+        },
+        {
+          "text": "login",
+          "label": "PASSWORD",
+          "start": 193,
+          "end": 198
+        },
+        {
+          "text": "dfoster_fin",
+          "label": "USERNAME",
+          "start": 224,
+          "end": 235
+        },
+        {
+          "text": "https://intranet.example.com/results",
+          "label": "URL",
+          "start": 269,
+          "end": 305
+        }
+      ]
+    },
+    {
+      "text": "Maria Santos graduated from the University of Edinburgh in 2016 and joined Brightwave Solutions as a Recruitment Consultant in June 2018. Her employee record lists IBAN GB29 NWBK 6016 1331 9268 19 and national insurance number QQ 12 34 56 C. She can be reached at maria.santos@brightwave-example.co.uk.",
+      "gold": [
+        {
+          "text": "Maria Santos",
+          "label": "PERSON",
+          "start": 0,
+          "end": 12
+        },
+        {
+          "text": "University of Edinburgh",
+          "label": "UNIVERSITY",
+          "start": 32,
+          "end": 55
+        },
+        {
+          "text": "2016",
+          "label": "DATE_TIME",
+          "start": 59,
+          "end": 63
+        },
+        {
+          "text": "Brightwave Solutions",
+          "label": "ORG",
+          "start": 75,
+          "end": 95
+        },
+        {
+          "text": "Recruitment Consultant",
+          "label": "JOB",
+          "start": 101,
+          "end": 123
+        },
+        {
+          "text": "June 2018",
+          "label": "DATE_TIME",
+          "start": 127,
+          "end": 136
+        },
+        {
+          "text": "GB29 NWBK 6016 1331 9268 19",
+          "label": "IBAN",
+          "start": 169,
+          "end": 196
+        },
+        {
+          "text": "QQ 12 34 56 C",
+          "label": "SSN",
+          "start": 227,
+          "end": 240
+        },
+        {
+          "text": "maria.santos@brightwave-example.co.uk",
+          "label": "EMAIL_ADDRESS",
+          "start": 264,
+          "end": 301
+        }
+      ],
+      "predicted": [
+        {
+          "text": "Maria Santos",
+          "label": "PERSON",
+          "start": 0,
+          "end": 12
+        },
+        {
+          "text": "University of Edinburgh",
+          "label": "UNIVERSITY",
+          "start": 32,
+          "end": 55
+        },
+        {
+          "text": "2016",
+          "label": "DATE_TIME",
+          "start": 59,
+          "end": 63
+        },
+        {
+          "text": "Brightwave Solutions",
+          "label": "ORG",
+          "start": 75,
+          "end": 95
+        },
+        {
+          "text": "Recruitment Consultant",
+          "label": "JOB",
+          "start": 101,
+          "end": 123
+        },
+        {
+          "text": "June 2018",
+          "label": "DATE_TIME",
+          "start": 127,
+          "end": 136
+        },
+        {
+          "text": "GB29 NWBK 6016 1331 9268 19",
+          "label": "IBAN",
+          "start": 169,
+          "end": 196
+        },
+        {
+          "text": "QQ 12 34 56 C",
+          "label": "SSN",
+          "start": 227,
+          "end": 240
+        },
+        {
+          "text": "maria.santos@brightwave-example.co.uk",
+          "label": "EMAIL_ADDRESS",
+          "start": 264,
+          "end": 301
+        }
+      ]
+    }
+  ]
+}

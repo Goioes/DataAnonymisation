@@ -7,6 +7,13 @@ from dataclasses import dataclass
 from functools import cache
 
 
+# the scoring set: 12 required labels from the assignment + 2 extra (SCOPING.md section 3)
+ALL_LABELS = (
+    "PERSON", "ORG", "JOB", "EMAIL_ADDRESS", "LOCATION", "AMOUNT", "DATE_TIME", "UNIVERSITY",
+    "PHONE_NUMBER", "URL", "IBAN", "SSN", "USERNAME", "PASSWORD",
+)
+
+
 @dataclass(frozen=True)
 class Entity:
     text: str
@@ -17,7 +24,7 @@ class Entity:
 
 class GlinerDetector:
     MODEL = "gliner-community/gliner_large-v2.5"
-    THRESHOLD = 0.5
+    THRESHOLD = 0.75  # common default, deliberately not tuned (SCOPING.md section 11)
     # natural-language label wording passed to GLiNER -> our label
     LABELS = {
         "person": "PERSON",
@@ -32,6 +39,8 @@ class GlinerDetector:
         "url": "URL",
         "bank account": "IBAN",
         "social security number": "SSN",
+        "username": "USERNAME",
+        "password": "PASSWORD",
     }
 
     def __init__(self):

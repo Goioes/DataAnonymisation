@@ -14,14 +14,16 @@ Extract sensitive entities from text with pre-trained NER models, anonymize them
 | **Nice to have** | Second benchmark: 10 AI-generated multilingual examples; chunking of long texts inside each detector (sentence/paragraph boundaries, offsets mapped back to the full text) |
 | **Out** | Regex layer, auth, database, Docker, custom frontend, fine-tuning |
 
-## 3. Entities (12 labels from the assignment)
-PERSON, ORG, JOB, EMAIL_ADDRESS, LOCATION, AMOUNT, DATE_TIME, UNIVERSITY, PHONE_NUMBER, URL, IBAN, SSN.
-Anonymized output uses `<LABEL>` placeholders, same as the dataset.
+## 3. Entities (14 labels)
+- 12 required labels from the assignment: PERSON, ORG, JOB, EMAIL_ADDRESS, LOCATION, AMOUNT, DATE_TIME, UNIVERSITY, PHONE_NUMBER, URL, IBAN, SSN.
+- 2 extra labels: USERNAME, PASSWORD. Not in `benchmark.csv`; introduced in some examples of the second benchmark. Piiranha supports both natively; GLiNER gets them as two more prompt labels.
+
+Anonymized output uses `<LABEL>` placeholders, same as the dataset. The 14 labels are one constant: the scoring set, and the set a benchmark row may use.
 
 ## 4. Models
 | Model | Type | Notes |
 |---|---|---|
-| GLiNER (`gliner-community/gliner_large-v2.5`) | Zero-shot span extraction, labels passed at inference | Covers all 12 labels; label wording and threshold need tuning; token limit (chunking is a nice-to-have, see section 2). Chosen over the multilingual checkpoint for English accuracy on `benchmark.csv`; its behaviour on NL/FR/DE/TR is a result of the second benchmark, not a claim (verify the language coverage on the model card). |
+| GLiNER (`gliner-community/gliner_large-v2.5`) | Zero-shot span extraction, labels passed at inference | Covers all 14 labels (zero-shot spans are label-sensitive: the extra labels change what it finds for the others); token limit (chunking is a nice-to-have, see section 2). Chosen over the multilingual checkpoint for English accuracy on `benchmark.csv`; its behaviour on NL/FR/DE/TR is a result of the second benchmark, not a claim (verify the language coverage on the model card). |
 | Piiranha (`iiiorg/piiranha-v1-detect-personal-information`) | Fine-tune of `mdeberta-v3-base` (token classifier), 6 languages (EN, ES, FR, DE, IT, NL), 256-token context | No ORG, JOB, AMOUNT, UNIVERSITY, URL; reported as unsupported. No country or state label either, so LOCATION recall is structurally limited (see below). Model card gives no aggregation guidance: adjacent tokens are merged in our wrapper. |
 
 Each model is loaded on first use and cached (not at startup), so startup time does not grow with every detector added to the registry. Weights are downloaded from Hugging Face at runtime, not committed.
@@ -38,7 +40,8 @@ Piiranha label mapping (checked against the model card, 17 PII labels):
 | ACCOUNTNUM | IBAN (approximate, no evidence on the card) |
 | DATEOFBIRTH | DATE_TIME (partial; the dataset has years, not birth dates, so expect near 0) |
 | IDCARDNUM, TAXNUM | SSN candidates; decide in step 1 by testing a Belgian national number |
-| CREDITCARDNUMBER, PASSWORD, USERNAME, DRIVERLICENSENUM | Dropped (no target label) |
+| USERNAME, PASSWORD | USERNAME, PASSWORD (extra labels, section 3) |
+| CREDITCARDNUMBER, DRIVERLICENSENUM | Dropped (no target label) |
 
 Piiranha's weakest reported label is SURNAME (recall 0.78); the card says first/last names are often confused but still flagged as PII, which is why GIVENNAME and SURNAME map to the same label.
 
@@ -54,6 +57,9 @@ evaluate ──► results file ──► benchmark page + README table
 - One flat package, one file per part: `detectors.py`, `anonymize.py`, `evaluate.py`, `app.py`, `api.py`. Split into folders only when a file gets painful.
 - `Entity(text, label, start, end)` is the only shared type.
 - Detectors: one class per model with `detect(text) -> list[Entity]`. Plain duck typing, no base class (two models share no logic). A dict registry `{name: detector}` feeds the dropdown and `GET /models`.
+- **Adding a benchmark:** drop a `text;label` CSV in `Data/` (extra columns such as `language` pass through). The file stem is its name. `evaluate.py` finds it by globbing `Data/*.csv`; the benchmark page finds its results by globbing `results/*/*.json`. No code change.
+- **Running the benchmark:** `uv run python evaluate.py` shows a numbered menu for benchmarks and one for models, each with "all" (built from `Data/*.csv` and the `DETECTORS` registry). Selected pairs are scored and each result is written to `results/<benchmark>/<model>.json`, overwriting that pair only. No command-line arguments (add later if unattended runs are needed).
+- **Validation before scoring:** all rows of every selected benchmark are checked before any model loads. A row whose two columns do not align, or that uses a label outside the 14, stops the run with file, row number and reason. Nothing is skipped silently.
 - **Adding a detector:** write one class with `detect(text) -> list[Entity]` (its label mapping stays inside the class) and add one line to the registry. The demo, benchmark script and API pick it up with no other change; the benchmark page shows every model found in the result file.
 - Dependencies point one way: `app` and `api` use `detectors` and `anonymize`; `evaluate` uses `detectors` only; detectors know nothing about them. The benchmark therefore measures exactly what the demo runs.
 - Models are loaded lazily on first selection/request and cached per name (`st.cache_resource` on a `get_detector(name)` function in Streamlit, a cached lookup in the API).
@@ -74,13 +80,14 @@ evaluate ──► results file ──► benchmark page + README table
 **Matching (entity level): `presidio-evaluator` `SpanEvaluator`, used at runtime**
 1. Gold spans are recovered by aligning the original text with the labelled text (literal text kept, each `<X>` becomes a capture group). Own code.
 2. Conversion layer (own code): tokenize each text with a spaCy blank tokenizer (no model download), then turn gold spans and model predictions into per-token tags, the format the evaluator expects.
-3. `SpanEvaluator(iou_threshold=0.5, char_based=True, ...)`, `beta=2`, skip-word list passed explicitly via `skip_words` (open decision, see "Reference and validation"). The evaluator normalizes tokens, merges adjacent same-type spans separated by skip words/punctuation (removes the address-splitting convention), and matches on character-level IoU: shared characters / characters covered by either span. The threshold is set explicitly because the code default (0.9) and its docstring (0.5) disagree.
+3. `SpanEvaluator(iou_threshold=0.5, char_based=True, ...)`, `beta=2`, skip-word list passed explicitly via `skip_words`: a short hand-picked, language-neutral constant (whitespace and punctuation only), see "Reference and validation". The evaluator normalizes tokens, merges adjacent same-type spans separated by skip words/punctuation (removes the address-splitting convention), and matches on character-level IoU: shared characters / characters covered by either span. The threshold is set explicitly because the code default (0.9) and its docstring (0.5) disagree.
 4. Right span with wrong label = FN for the gold label plus FP for the predicted label. Results come from `calculate_score_on_df(level="both")`: per-type counts and P/R/F2, plus a global type-agnostic "PII vs O" score.
 
 **Metrics**
 - Precision, recall, F1 everywhere; **headline = F2** (recall weighted double; a missed entity is a privacy leak, over-redaction is only a utility loss). The Presidio docs recommend the same: "we recommend to use the beta=2 score, which gives more importance to recall" (https://presidio.dataprivacystack.org/evaluation/).
 - Aggregation: micro only, computed by summing the evaluator's per-type TP/FP/FN. The evaluator's global type-agnostic score is shown as well (closest thing to a leak rate).
-- Per-label table: support, P, R, F1, F2 per model. Unsupported label shown as 0 with a flag; support 0 shown as n/a.
+- Scoring set: the 14 labels, one headline across all of them, on every benchmark (a false positive on an extra label counts). Predicted labels outside the 14 are discarded before scoring.
+- Per-label table: support, P, R, F1, F2 per model, extra labels marked. A label a model does not support simply scores 0; the reason is explained in the report (label mapping, section 4), not flagged by the code. Gold support 0 is shown as n/a.
 
 **Reference and validation**
 - Chosen because it is Microsoft's open-source reference tooling (presidio-research), covers normalization, merging, char-level IoU, F-beta and per-type results out of the box, and has a configurable skip-word list.
@@ -88,9 +95,9 @@ evaluate ──► results file ──► benchmark page + README table
   - Pre-1.0; the API is already changing (`calculate_score()` was removed). Pin the version via `uv.lock`.
   - Heavy dependencies: **resolved**. GLiNER, `SpanEvaluator` and Piiranha import and run in one `uv` environment.
   - Multiple overlaps: **checked, acceptable**. Same-type predictions overlapping one gold span are scored by their cumulative IoU (e.g. gold "New York City" vs predictions "New York" + "City" = 1 TP).
-  - Tokenizer-dependent boundaries: still to test in step 3 on the dataset's edge cases (`Apple Inc.`, comma-separated addresses). `inc.` is a skip word, so the trailing period of "Apple Inc." does not matter.
+  - Tokenizer-dependent boundaries: still to test in step 3 on the dataset's edge cases (`Apple Inc.`, comma-separated addresses). Checked: the tokenizer splits "Inc." into `Inc` and `.`, and `.` is a skip word as punctuation, so the trailing period of "Apple Inc." does not matter.
   - Span merging: **confirmed**. The default skip-word list contains `and`, so "Bill Gates and Paul Allen" (two gold PERSON spans) merges into one span (1 TP instead of 2; a model finding only "Bill Gates" gets 1 FP + 1 FN instead of 1 TP + 1 FN). The `skip_words` argument replaces the default list, verified by removing `and`.
-  - **Open decision, skip list:** recommended is the default Presidio list (`get_skip_words()`) minus `and`. The default also strips words like `street`, `de`, `first`, `last`, `year`, `old`, `day`, `inc.` before matching, which is lenient ("Main Street" matches "Main"). Alternative: a short hand-picked list (punctuation, whitespace, `inc.`), stricter but more work. Decide in step 3 and write the final choice in the README.
+  - **Decided, skip list:** whitespace and punctuation only (no words, so no language is treated differently), kept as a constant in `evaluate.py`. The Presidio default strips English words like `street`, `de`, `first`, `year` before matching, which is lenient on English and inconsistent on the multilingual benchmark ("Jan de Vries" loses `de`). Write the final list and this reasoning in the README.
   - `iou_threshold`: **confirmed**, the code default is 0.9 and the docstring says 0.5. We set 0.5 explicitly. The beta=2 recommendation is taken from the Presidio docs as quoted above.
 - Fallback if the evaluator causes problems later: own implementation of the same semantics (about 40 lines).
 
@@ -105,10 +112,11 @@ evaluate ──► results file ──► benchmark page + README table
 ## 8. Second benchmark (nice to have)
 - 10 AI-generated, **human-reviewed** examples, same `<LABEL>` format.
 - Languages: NL, FR, DE, plus Turkish (outside Piiranha's 6 languages) and others to be chosen. The chosen GLiNER checkpoint is English-focused, so this benchmark tests both models outside their comfort zone in different ways.
-- Must include IBAN and SSN.
-- Fictitious data only: made-up names, test IBANs, invalid SSNs. No real personal data.
+- Must include IBAN and SSN, and some USERNAME and PASSWORD examples (the extra labels, section 3).
+- Fictitious data only: made-up names, test IBANs, invalid SSNs, made-up usernames and passwords. No real personal data.
+- Same `text;label` format as `benchmark.csv`, plus an optional `language` column that passes through to the error list.
 - About one example per language, so no per-language scores; show a per-example table (language, gold, found, missed, extra).
-- This is our reading of the assignment's "Extra" (own labelled file for benchmarking). The assignment literally asks for more entities; IBAN and SSN are already among the 12, so state this interpretation in the presentation.
+- This is our reading of the assignment's "Extra" (own labelled file for benchmarking, more entities). The extra entities are USERNAME and PASSWORD; state this interpretation in the presentation.
 
 ## 9. Licences (README section)
 - Piiranha: CC-BY-NC-ND 4.0 (confirmed on the model card; the card does not summarise the terms, so the wording below comes from the CC licence). Attribution required, non-commercial only, no redistributing modified weights. This project: benchmark and demo only, not cleared for production.
@@ -133,14 +141,19 @@ evaluate ──► results file ──► benchmark page + README table
 - Extensibility: a new detector is one class plus one registry line (section 5).
 - Model loading: lazy on first use, cached per model name (sections 4 and 5).
 - Demo page opens pre-filled with a benchmark row, with a dropdown to pick other rows; the text stays editable.
-- GLiNER threshold is a fixed constant inside the detector, tuned once in step 1. No slider in the demo, so the demo and the benchmark run the same thing. Threshold sensitivity stays parked (section 13).
+- GLiNER threshold is a fixed constant inside the detector: 0.75, taken from a blog post as the most common value, deliberately not tuned (10 benchmark rows are too few: tuning on them would flatter the scores). Label wording is not tuned either. No slider in the demo, so the demo and the benchmark run the same thing. Threshold sensitivity stays parked (section 13).
 - Chunking of long texts belongs inside each detector (not in callers), built as a nice-to-have.
 - Until chunking exists, detectors do no length handling (demo scope). Known limitation, to state in the README: text beyond a model's token limit may be left unprocessed, so the "anonymized" output can still contain sensitive data. The API's planned length limit stays.
 - GLiNER `gliner_large-v2.5` licence: Apache-2.0 (confirmed).
 - Build order: steps 1 and 2, then the demo page, then step 3, then the benchmark page.
 - Matching: `presidio-evaluator` `SpanEvaluator`, IoU threshold 0.5 (a parameter; explained in the presentation), beta = 2, micro aggregation plus the global type-agnostic score. Skip list still open (section 7); the default list merges spans over "and".
 - Step 0 spike passed: imports and Piiranha load work in one environment, evaluator semantics checked (section 7).
-- Benchmark page reads the result file written by the offline benchmark script (not served via the API).
+- Benchmark page reads the result files written by the offline benchmark script (not served via the API).
+- Benchmarks: `text;label` CSVs only, discovered by globbing `Data/*.csv`, no registry (section 5). Rows are validated up front and fail loudly.
+- `evaluate.py` is run by hand with an interactive menu for benchmarks and models, each with "all" (section 5).
+- Results: one JSON per benchmark and model pair, `results/<benchmark>/<model>.json`, overwritten per run, so partial runs never wipe other results. The page globs them with no benchmark-specific code.
+- Labels: 14 (12 required plus extra USERNAME and PASSWORD), one scoring set, one headline. Unsupported labels score 0 and are explained in the report. GLiNER gets the two extra labels; no tuning (threshold 0.75).
+- Skip list: short hand-picked, language-neutral constant (section 7).
 - Second (multilingual) benchmark is nice to have.
 
 ## 12. Plan
@@ -150,7 +163,7 @@ Each step ends with a check; do not start the next step before it passes.
 | Step | Work | Done when |
 |---|---|---|
 | 0. Setup | Dependencies are already in `pyproject.toml` and `uv.lock` (gliner, transformers, torch, presidio-evaluator, fastapi, uvicorn, streamlit, pandas). Import GLiNER and `SpanEvaluator` in one environment, load the Piiranha pipeline once, and run a `SpanEvaluator` smoke test on a tiny example (IoU default, skip-word list, multiple-overlap behaviour). Fill in README skeleton and the `pyproject` description. | `uv sync` works from a clean checkout, both imports succeed, Piiranha loads, smoke test behaves as documented. If it fails, the matching falls back to our own implementation of the same semantics. |
-| 1. Models | Wrappers for GLiNER and Piiranha that return character spans in our 12-label schema. Piiranha mapping and licence are checked on the model card; GLiNER licence still to verify. Decide IDCARDNUM/TAXNUM to SSN by testing. GLiNER checkpoint is decided (`gliner_large-v2.5`); tune the threshold. Piiranha observations from step 0 (`try_piiranha.py`): the model returns `I-` tags only; a lone `▁` token starts some entities with the span beginning at the preceding space, and some tokens carry a trailing comma or period, so the wrapper trims whitespace and trailing punctuation before merging. The tokenizer was checked (the `transformers` tokenizer and the repo's `spm.model` split identically, so it is not a tokenizer bug). On short sentences Piiranha confidently labels names (`Tim Cook`, `Jan Peeters`), an email and an IBAN as `O`, while finding cities, streets, zip codes and phone numbers; test on a benchmark-style paragraph, and if names are still missed report it as a result. If it looks like a library effect, retest under `transformers` 4.x in a throwaway environment. Windows console needs `PYTHONUTF8=1` to print the `▁` character. | Both models run on one sentence from the command line. |
+| 1. Models | Wrappers for GLiNER and Piiranha that return character spans in our 12-label schema. Piiranha mapping and licence are checked on the model card; GLiNER licence still to verify. Decide IDCARDNUM/TAXNUM to SSN by testing. GLiNER checkpoint is decided (`gliner_large-v2.5`); threshold fixed at 0.75, not tuned. Piiranha observations from step 0 (`try_piiranha.py`): the model returns `I-` tags only; a lone `▁` token starts some entities with the span beginning at the preceding space, and some tokens carry a trailing comma or period, so the wrapper trims whitespace and trailing punctuation before merging. The tokenizer was checked (the `transformers` tokenizer and the repo's `spm.model` split identically, so it is not a tokenizer bug). On short sentences Piiranha confidently labels names (`Tim Cook`, `Jan Peeters`), an email and an IBAN as `O`, while finding cities, streets, zip codes and phone numbers; test on a benchmark-style paragraph, and if names are still missed report it as a result. If it looks like a library effect, retest under `transformers` 4.x in a throwaway environment. Windows console needs `PYTHONUTF8=1` to print the `▁` character. | Both models run on one sentence from the command line. |
 | 2. Anonymize | `anonymize(text, spans)` produces `<LABEL>` text. | Both models anonymize one sentence from the command line. |
 | 3. Benchmark | Recover gold spans from `benchmark.csv`. Conversion layer to per-token tags. `SpanEvaluator` with threshold 0.5 and beta 2. Script writes a result file (per-label table, micro, global score, error list). One small test file for gold alignment and `anonymize`. | All 10 rows align; result file written; errors inspected by hand for plausibility. |
 | 4. App | Streamlit demo page (imports the detectors) and benchmark page (reads the result file). | Both pages work end to end. |
@@ -158,7 +171,7 @@ Each step ends with a check; do not start the next step before it passes.
 | Should: API | FastAPI endpoints (section 6) with input validation (empty text, unknown model, length limit). Can be built any time after step 2. | `POST /anonymize` works for both models. |
 | Nice to have | Multilingual benchmark (section 8), inserted after step 3 if time allows. Human review of the examples before use. | Second result file shown on the benchmark page. |
 
-Open choices to settle during the steps: GLiNER threshold (step 1), skip list (step 3). Project layout is decided: flat package (section 5).
+No open tuning choices: GLiNER threshold is fixed at 0.75. Project layout is decided: flat package (section 5).
 
 ## 13. Parked ideas (not in scope)
 - Confusion matrix heatmap (the evaluator can produce it).
@@ -178,8 +191,16 @@ Last updated after the first build session. Work happens directly on `main`; cha
 - IDCARDNUM / TAXNUM to SSN: test with a Belgian national number.
 - Optional retest of Piiranha under `transformers` 4.x in a throwaway environment.
 
-**Next: step 3 (benchmark), then the benchmark page**
-- Open decisions: skip list for `SpanEvaluator` (section 7) and the result-file format (the contract between `evaluate.py` and the benchmark page; JSON or CSV, one file per benchmark or combined).
+**Step 3 built** (`evaluate.py`, `test_evaluate.py`): loader with up-front validation, token conversion, `SpanEvaluator`, interactive menu, `results/<benchmark>/<model>.json`. All 10 rows align; `uv run python test_evaluate.py` passes. First results on `benchmark.csv` (14 labels, GLiNER threshold 0.75): GLiNER micro P 0.89 / R 0.89 / F2 0.89 (at 0.5 it was 0.84 / 0.91 / 0.90, shown only for context); Piiranha micro P 0.80 / R 0.17 / F2 0.21 (no names, orgs, dates, amounts; 6 of 15 locations).
+- With `username` in the prompt, GLiNER tags `john.smith@apple.com` as USERNAME instead of EMAIL_ADDRESS (example 0): the extra labels cost accuracy on a required one. Reported as a result, not tuned away.
+- The error list stores the evaluator's span text, with tokens joined by spaces (`co - founder`). Cosmetic; fix when the page shows it.
+- Not yet committed.
+
+**Benchmark page built** (`pages/Benchmark.py`, Streamlit multipage next to `app.py`): benchmark dropdown from `results/*/`, overall table (micro and PII vs O), per-label table (extra labels marked, n/a for support 0, `pred` column shows false positives on unsupported rows), error list (extra CSV columns pass through). Checked headlessly with `AppTest`, not yet in a browser. The evaluator reports a wrong-label match as three rows (WrongEntity, FN, FP).
+
+**Next: check both pages in a browser, second benchmark, README and presentation**
+- Decided (section 11): skip list, result layout (`results/<benchmark>/<model>.json`), benchmark discovery, interactive menu, up-front validation, 14-label scoring set.
+- To do in code: done: `USERNAME` and `PASSWORD` added to GLiNER's labels, threshold 0.75; one shared 14-label constant in `detectors.py`.
 - `Data/benchmark.csv` is semicolon-separated (`text;label`): read it with `sep=";"`.
 - One small test file for gold alignment and `anonymize` (section 12).
 
@@ -189,5 +210,5 @@ Last updated after the first build session. Work happens directly on `main`; cha
 - GLiNER's prompt wording for IBAN is `"bank account"`, mapped to the label `IBAN`. The label schema stays at the 12 labels.
 
 **Practical**
-- `try_gliner.py` and `try_piiranha.py` are kept on purpose for manual testing; their logic is duplicated in `detectors.py`.
+- `try_gliner.py` and `try_piiranha.py` were removed in the commit that added `detectors.py` and `app.py`; use `uv run python detectors.py "sentence"` for manual tests.
 - On Windows run Python with `PYTHONUTF8=1`.

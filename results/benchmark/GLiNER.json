@@ -1,0 +1,905 @@
+{
+  "benchmark": "benchmark",
+  "model": "GLiNER",
+  "scored_at": "2026-11-08T21:10:27",
+  "examples": 10,
+  "labels": {
+    "PERSON": {
+      "support": 7,
+      "predicted": 7,
+      "tp": 7,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "f2": 1.0
+    },
+    "ORG": {
+      "support": 8,
+      "predicted": 8,
+      "tp": 8,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "f2": 1.0
+    },
+    "JOB": {
+      "support": 2,
+      "predicted": 4,
+      "tp": 2,
+      "precision": 0.5,
+      "recall": 1.0,
+      "f1": 0.6666666666666666,
+      "f2": 0.8333333333333334
+    },
+    "EMAIL_ADDRESS": {
+      "support": 1,
+      "predicted": 0,
+      "tp": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "f2": 0.0
+    },
+    "LOCATION": {
+      "support": 15,
+      "predicted": 14,
+      "tp": 13,
+      "precision": 0.9285714285714286,
+      "recall": 0.8666666666666667,
+      "f1": 0.896551724137931,
+      "f2": 0.8783783783783786
+    },
+    "AMOUNT": {
+      "support": 2,
+      "predicted": 2,
+      "tp": 2,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "f2": 1.0
+    },
+    "DATE_TIME": {
+      "support": 8,
+      "predicted": 6,
+      "tp": 6,
+      "precision": 1.0,
+      "recall": 0.75,
+      "f1": 0.8571428571428571,
+      "f2": 0.7894736842105263
+    },
+    "UNIVERSITY": {
+      "support": 1,
+      "predicted": 1,
+      "tp": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "f2": 1.0
+    },
+    "PHONE_NUMBER": {
+      "support": 1,
+      "predicted": 2,
+      "tp": 1,
+      "precision": 0.5,
+      "recall": 1.0,
+      "f1": 0.6666666666666666,
+      "f2": 0.8333333333333334
+    },
+    "URL": {
+      "support": 1,
+      "predicted": 1,
+      "tp": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "f2": 1.0
+    },
+    "IBAN": {
+      "support": 0,
+      "predicted": 0,
+      "tp": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "f2": 0.0
+    },
+    "SSN": {
+      "support": 0,
+      "predicted": 0,
+      "tp": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "f2": 0.0
+    },
+    "USERNAME": {
+      "support": 0,
+      "predicted": 1,
+      "tp": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "f2": 0.0
+    },
+    "PASSWORD": {
+      "support": 0,
+      "predicted": 0,
+      "tp": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "f2": 0.0
+    }
+  },
+  "micro": {
+    "support": 46,
+    "predicted": 46,
+    "tp": 41,
+    "precision": 0.8913043478260869,
+    "recall": 0.8913043478260869,
+    "f1": 0.8913043478260869,
+    "f2": 0.8913043478260869
+  },
+  "global": {
+    "support": 46,
+    "predicted": 46,
+    "tp": 44,
+    "precision": 0.9565217391304348,
+    "recall": 0.9565217391304348,
+    "f1": 0.9565217391304348,
+    "f2": 0.9565217391304348
+  },
+  "errors": [
+    {
+      "example": 0,
+      "type": "WrongEntity",
+      "gold": "EMAIL_ADDRESS",
+      "predicted": "USERNAME",
+      "text": "john.smith@apple.com"
+    },
+    {
+      "example": 0,
+      "type": "FN",
+      "gold": "EMAIL_ADDRESS",
+      "predicted": "O",
+      "text": "john.smith@apple.com"
+    },
+    {
+      "example": 0,
+      "type": "FP",
+      "gold": "O",
+      "predicted": "USERNAME",
+      "text": "john.smith@apple.com"
+    },
+    {
+      "example": 3,
+      "type": "WrongEntity",
+      "gold": "LOCATION",
+      "predicted": "JOB",
+      "text": "the United States"
+    },
+    {
+      "example": 3,
+      "type": "FN",
+      "gold": "LOCATION",
+      "predicted": "O",
+      "text": "the United States"
+    },
+    {
+      "example": 3,
+      "type": "FP",
+      "gold": "O",
+      "predicted": "JOB",
+      "text": "President of the United States"
+    },
+    {
+      "example": 3,
+      "type": "FN",
+      "gold": "DATE_TIME",
+      "predicted": "O",
+      "text": "2009"
+    },
+    {
+      "example": 3,
+      "type": "FN",
+      "gold": "DATE_TIME",
+      "predicted": "O",
+      "text": "2017"
+    },
+    {
+      "example": 4,
+      "type": "FP",
+      "gold": "O",
+      "predicted": "LOCATION",
+      "text": "Eiffel Tower"
+    },
+    {
+      "example": 6,
+      "type": "FP",
+      "gold": "O",
+      "predicted": "JOB",
+      "text": "co - founder"
+    },
+    {
+      "example": 7,
+      "type": "WrongEntity",
+      "gold": "LOCATION",
+      "predicted": "PHONE_NUMBER",
+      "text": "212"
+    },
+    {
+      "example": 7,
+      "type": "FN",
+      "gold": "LOCATION",
+      "predicted": "O",
+      "text": "212"
+    },
+    {
+      "example": 7,
+      "type": "FP",
+      "gold": "O",
+      "predicted": "PHONE_NUMBER",
+      "text": "212"
+    }
+  ],
+  "details": [
+    {
+      "text": "John Smith works for Apple Inc. as a software engineer. His email address is john.smith@apple.com. He recently traveled to London for a conference.",
+      "gold": [
+        {
+          "text": "John Smith",
+          "label": "PERSON",
+          "start": 0,
+          "end": 10
+        },
+        {
+          "text": "Apple Inc",
+          "label": "ORG",
+          "start": 21,
+          "end": 30
+        },
+        {
+          "text": "software engineer",
+          "label": "JOB",
+          "start": 37,
+          "end": 54
+        },
+        {
+          "text": "john.smith@apple.com",
+          "label": "EMAIL_ADDRESS",
+          "start": 77,
+          "end": 97
+        },
+        {
+          "text": "London",
+          "label": "LOCATION",
+          "start": 123,
+          "end": 129
+        }
+      ],
+      "predicted": [
+        {
+          "text": "John Smith",
+          "label": "PERSON",
+          "start": 0,
+          "end": 10
+        },
+        {
+          "text": "Apple Inc.",
+          "label": "ORG",
+          "start": 21,
+          "end": 31
+        },
+        {
+          "text": "software engineer",
+          "label": "JOB",
+          "start": 37,
+          "end": 54
+        },
+        {
+          "text": "john.smith",
+          "label": "USERNAME",
+          "start": 77,
+          "end": 87
+        },
+        {
+          "text": "London",
+          "label": "LOCATION",
+          "start": 123,
+          "end": 129
+        }
+      ]
+    },
+    {
+      "text": "Paris is the capital of France. It is a popular tourist destination known for its museums and art galleries.",
+      "gold": [
+        {
+          "text": "Paris",
+          "label": "LOCATION",
+          "start": 0,
+          "end": 5
+        },
+        {
+          "text": "France",
+          "label": "LOCATION",
+          "start": 24,
+          "end": 30
+        }
+      ],
+      "predicted": [
+        {
+          "text": "Paris",
+          "label": "LOCATION",
+          "start": 0,
+          "end": 5
+        },
+        {
+          "text": "France",
+          "label": "LOCATION",
+          "start": 24,
+          "end": 30
+        }
+      ]
+    },
+    {
+      "text": "Google has acquired YouTube for $1.65 billion. The deal was finalized in 2006.",
+      "gold": [
+        {
+          "text": "Google",
+          "label": "ORG",
+          "start": 0,
+          "end": 6
+        },
+        {
+          "text": "YouTube",
+          "label": "ORG",
+          "start": 20,
+          "end": 27
+        },
+        {
+          "text": "$1.65 billion",
+          "label": "AMOUNT",
+          "start": 32,
+          "end": 45
+        },
+        {
+          "text": "2006",
+          "label": "DATE_TIME",
+          "start": 73,
+          "end": 77
+        }
+      ],
+      "predicted": [
+        {
+          "text": "Google",
+          "label": "ORG",
+          "start": 0,
+          "end": 6
+        },
+        {
+          "text": "YouTube",
+          "label": "ORG",
+          "start": 20,
+          "end": 27
+        },
+        {
+          "text": "$1.65 billion",
+          "label": "AMOUNT",
+          "start": 32,
+          "end": 45
+        },
+        {
+          "text": "2006",
+          "label": "DATE_TIME",
+          "start": 73,
+          "end": 77
+        }
+      ]
+    },
+    {
+      "text": "Barack Obama was the President of the United States from 2009 to 2017. He was born in Honolulu, Hawaii and attended Harvard Law School. His phone number is +1 (202) 555-0199.",
+      "gold": [
+        {
+          "text": "Barack Obama",
+          "label": "PERSON",
+          "start": 0,
+          "end": 12
+        },
+        {
+          "text": "the United States",
+          "label": "LOCATION",
+          "start": 34,
+          "end": 51
+        },
+        {
+          "text": "2009",
+          "label": "DATE_TIME",
+          "start": 57,
+          "end": 61
+        },
+        {
+          "text": "2017",
+          "label": "DATE_TIME",
+          "start": 65,
+          "end": 69
+        },
+        {
+          "text": "Honolulu",
+          "label": "LOCATION",
+          "start": 86,
+          "end": 94
+        },
+        {
+          "text": "Hawaii",
+          "label": "LOCATION",
+          "start": 96,
+          "end": 102
+        },
+        {
+          "text": "Harvard Law School",
+          "label": "UNIVERSITY",
+          "start": 116,
+          "end": 134
+        },
+        {
+          "text": "+1 (202) 555-0199",
+          "label": "PHONE_NUMBER",
+          "start": 156,
+          "end": 173
+        }
+      ],
+      "predicted": [
+        {
+          "text": "Barack Obama",
+          "label": "PERSON",
+          "start": 0,
+          "end": 12
+        },
+        {
+          "text": "President of the United States",
+          "label": "JOB",
+          "start": 21,
+          "end": 51
+        },
+        {
+          "text": "Honolulu, Hawaii",
+          "label": "LOCATION",
+          "start": 86,
+          "end": 102
+        },
+        {
+          "text": "Harvard Law School",
+          "label": "UNIVERSITY",
+          "start": 116,
+          "end": 134
+        },
+        {
+          "text": "+1 (202) 555-0199",
+          "label": "PHONE_NUMBER",
+          "start": 156,
+          "end": 173
+        }
+      ]
+    },
+    {
+      "text": "The Eiffel Tower is a famous landmark in Paris. It was built in 1889 and is one of the most visited attractions in the world.",
+      "gold": [
+        {
+          "text": "Paris",
+          "label": "LOCATION",
+          "start": 41,
+          "end": 46
+        },
+        {
+          "text": "1889",
+          "label": "DATE_TIME",
+          "start": 64,
+          "end": 68
+        }
+      ],
+      "predicted": [
+        {
+          "text": "Eiffel Tower",
+          "label": "LOCATION",
+          "start": 4,
+          "end": 16
+        },
+        {
+          "text": "Paris",
+          "label": "LOCATION",
+          "start": 41,
+          "end": 46
+        },
+        {
+          "text": "1889",
+          "label": "DATE_TIME",
+          "start": 64,
+          "end": 68
+        }
+      ]
+    },
+    {
+      "text": "Amazon is a multinational technology company based in Seattle, Washington. It was founded by Jeff Bezos in 1994. Their website is www.amazon.com.",
+      "gold": [
+        {
+          "text": "Amazon",
+          "label": "ORG",
+          "start": 0,
+          "end": 6
+        },
+        {
+          "text": "Seattle",
+          "label": "LOCATION",
+          "start": 54,
+          "end": 61
+        },
+        {
+          "text": "Washington",
+          "label": "LOCATION",
+          "start": 63,
+          "end": 73
+        },
+        {
+          "text": "Jeff Bezos",
+          "label": "PERSON",
+          "start": 93,
+          "end": 103
+        },
+        {
+          "text": "1994",
+          "label": "DATE_TIME",
+          "start": 107,
+          "end": 111
+        },
+        {
+          "text": "www.amazon.com",
+          "label": "URL",
+          "start": 130,
+          "end": 144
+        }
+      ],
+      "predicted": [
+        {
+          "text": "Amazon",
+          "label": "ORG",
+          "start": 0,
+          "end": 6
+        },
+        {
+          "text": "Seattle, Washington",
+          "label": "LOCATION",
+          "start": 54,
+          "end": 73
+        },
+        {
+          "text": "Jeff Bezos",
+          "label": "PERSON",
+          "start": 93,
+          "end": 103
+        },
+        {
+          "text": "1994",
+          "label": "DATE_TIME",
+          "start": 107,
+          "end": 111
+        },
+        {
+          "text": "www.amazon.com",
+          "label": "URL",
+          "start": 130,
+          "end": 144
+        }
+      ]
+    },
+    {
+      "text": "Steve Jobs was the co-founder of Apple Inc. He was known for his contributions to the personal computer revolution and the development of the iPhone. He passed away in 2011.",
+      "gold": [
+        {
+          "text": "Steve Jobs",
+          "label": "PERSON",
+          "start": 0,
+          "end": 10
+        },
+        {
+          "text": "Apple Inc.",
+          "label": "ORG",
+          "start": 33,
+          "end": 43
+        },
+        {
+          "text": "2011",
+          "label": "DATE_TIME",
+          "start": 168,
+          "end": 172
+        }
+      ],
+      "predicted": [
+        {
+          "text": "Steve Jobs",
+          "label": "PERSON",
+          "start": 0,
+          "end": 10
+        },
+        {
+          "text": "co-founder",
+          "label": "JOB",
+          "start": 19,
+          "end": 29
+        },
+        {
+          "text": "Apple Inc",
+          "label": "ORG",
+          "start": 33,
+          "end": 42
+        },
+        {
+          "text": "2011",
+          "label": "DATE_TIME",
+          "start": 168,
+          "end": 172
+        }
+      ]
+    },
+    {
+      "text": "New York City is the largest city in the United States. It is located in the state of New York and has a population of over 8 million people. The city's area code is 212.",
+      "gold": [
+        {
+          "text": "New York City",
+          "label": "LOCATION",
+          "start": 0,
+          "end": 13
+        },
+        {
+          "text": "the United States",
+          "label": "LOCATION",
+          "start": 37,
+          "end": 54
+        },
+        {
+          "text": "New York",
+          "label": "LOCATION",
+          "start": 86,
+          "end": 94
+        },
+        {
+          "text": "212",
+          "label": "LOCATION",
+          "start": 166,
+          "end": 169
+        }
+      ],
+      "predicted": [
+        {
+          "text": "New York City",
+          "label": "LOCATION",
+          "start": 0,
+          "end": 13
+        },
+        {
+          "text": "United States",
+          "label": "LOCATION",
+          "start": 41,
+          "end": 54
+        },
+        {
+          "text": "New York",
+          "label": "LOCATION",
+          "start": 86,
+          "end": 94
+        },
+        {
+          "text": "212",
+          "label": "PHONE_NUMBER",
+          "start": 166,
+          "end": 169
+        }
+      ]
+    },
+    {
+      "text": "Microsoft Corporation is a technology company based in Redmond, Washington. It was founded by Bill Gates and Paul Allen in 1975. Their headquarters are located at One Microsoft Way, Redmond, WA 98052.",
+      "gold": [
+        {
+          "text": "Microsoft Corporation",
+          "label": "ORG",
+          "start": 0,
+          "end": 21
+        },
+        {
+          "text": "Redmond",
+          "label": "LOCATION",
+          "start": 55,
+          "end": 62
+        },
+        {
+          "text": "Washington",
+          "label": "LOCATION",
+          "start": 64,
+          "end": 74
+        },
+        {
+          "text": "Bill Gates",
+          "label": "PERSON",
+          "start": 94,
+          "end": 104
+        },
+        {
+          "text": "Paul Allen",
+          "label": "PERSON",
+          "start": 109,
+          "end": 119
+        },
+        {
+          "text": "1975",
+          "label": "DATE_TIME",
+          "start": 123,
+          "end": 127
+        },
+        {
+          "text": "One Microsoft Way",
+          "label": "LOCATION",
+          "start": 163,
+          "end": 180
+        },
+        {
+          "text": "Redmond",
+          "label": "LOCATION",
+          "start": 182,
+          "end": 189
+        },
+        {
+          "text": "WA 98052",
+          "label": "LOCATION",
+          "start": 191,
+          "end": 199
+        }
+      ],
+      "predicted": [
+        {
+          "text": "Microsoft Corporation",
+          "label": "ORG",
+          "start": 0,
+          "end": 21
+        },
+        {
+          "text": "Redmond, Washington",
+          "label": "LOCATION",
+          "start": 55,
+          "end": 74
+        },
+        {
+          "text": "Bill Gates",
+          "label": "PERSON",
+          "start": 94,
+          "end": 104
+        },
+        {
+          "text": "Paul Allen",
+          "label": "PERSON",
+          "start": 109,
+          "end": 119
+        },
+        {
+          "text": "1975",
+          "label": "DATE_TIME",
+          "start": 123,
+          "end": 127
+        },
+        {
+          "text": "One Microsoft Way",
+          "label": "LOCATION",
+          "start": 163,
+          "end": 180
+        },
+        {
+          "text": "Redmond, WA",
+          "label": "LOCATION",
+          "start": 182,
+          "end": 193
+        }
+      ]
+    },
+    {
+      "text": "Elon Musk is the CEO of SpaceX and Tesla. He was born in South Africa and became a naturalized US citizen in 2002. His net worth is estimated to be over $100 billion.",
+      "gold": [
+        {
+          "text": "Elon Musk",
+          "label": "PERSON",
+          "start": 0,
+          "end": 9
+        },
+        {
+          "text": "CEO",
+          "label": "JOB",
+          "start": 17,
+          "end": 20
+        },
+        {
+          "text": "SpaceX",
+          "label": "ORG",
+          "start": 24,
+          "end": 30
+        },
+        {
+          "text": "Tesla",
+          "label": "ORG",
+          "start": 35,
+          "end": 40
+        },
+        {
+          "text": "South Africa",
+          "label": "LOCATION",
+          "start": 57,
+          "end": 69
+        },
+        {
+          "text": "US",
+          "label": "LOCATION",
+          "start": 95,
+          "end": 97
+        },
+        {
+          "text": "2002",
+          "label": "DATE_TIME",
+          "start": 109,
+          "end": 113
+        },
+        {
+          "text": "$100 billion",
+          "label": "AMOUNT",
+          "start": 153,
+          "end": 165
+        }
+      ],
+      "predicted": [
+        {
+          "text": "Elon Musk",
+          "label": "PERSON",
+          "start": 0,
+          "end": 9
+        },
+        {
+          "text": "CEO",
+          "label": "JOB",
+          "start": 17,
+          "end": 20
+        },
+        {
+          "text": "SpaceX",
+          "label": "ORG",
+          "start": 24,
+          "end": 30
+        },
+        {
+          "text": "Tesla",
+          "label": "ORG",
+          "start": 35,
+          "end": 40
+        },
+        {
+          "text": "South Africa",
+          "label": "LOCATION",
+          "start": 57,
+          "end": 69
+        },
+        {
+          "text": "US",
+          "label": "LOCATION",
+          "start": 95,
+          "end": 97
+        },
+        {
+          "text": "2002",
+          "label": "DATE_TIME",
+          "start": 109,
+          "end": 113
+        },
+        {
+          "text": "$100 billion",
+          "label": "AMOUNT",
+          "start": 153,
+          "end": 165
+        }
+      ]
+    }
+  ]
+}
