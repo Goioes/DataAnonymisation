@@ -1,6 +1,6 @@
 # Method
 
-How the anonymizer works and how it is scored. Terms are defined in [CONTEXT.md](CONTEXT.md).
+How the anonymizer works and how it is scored.
 
 ## Pipeline
 
@@ -43,7 +43,7 @@ All 14 are the scoring set on every benchmark. Predicted labels outside the 14 a
 
 IDCARDNUM and TAXNUM to SSN is an untested guess (not yet checked with a Belgian national number). The model card gives no guidance on merging tokens, so the wrapper merges adjacent same-label tokens, and trims leading whitespace and trailing punctuation that the tokens carry.
 
-Models are downloaded from Hugging Face at runtime (not committed) and loaded once, at startup.
+Models are downloaded from Hugging Face at runtime (not committed) and loaded once, at startup. Each is pinned to a commit hash (`REVISION` in its detector class), so the weights cannot change under the benchmark results.
 
 ## Evaluation
 

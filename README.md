@@ -2,16 +2,36 @@
 
 Extract sensitive entities from text with pre-trained NER models (GLiNER, Piiranha), anonymize them with `<LABEL>` placeholders, and benchmark both models on the labelled datasets in `Data/`.
 
-## Setup
-Requires [uv](https://docs.astral.sh/uv/) and Python >= 3.12.
+## Installation
+1. **Install [uv](https://docs.astral.sh/uv/)** (Python package and project manager). Skip if `uv --version` already works.
 
-```
-uv sync
-```
+   Windows (PowerShell):
+   ```powershell
+   powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+   ```
+   macOS / Linux:
+   ```
+   curl -LsSf https://astral.sh/uv/install.sh | sh
+   ```
+   Open a new terminal afterwards so `uv` is on your PATH.
 
-Model weights are downloaded from Hugging Face on first run (not committed). Both the demo app and the API load all models at startup, so the first start takes a while.
+2. **Clone the repository:**
+   ```
+   git clone https://github.com/Goioes/DataAnonymisation.git
+   cd DataAnonymisation
+   ```
 
-On Windows set `PYTHONUTF8=1` before running Python.
+3. **Install the dependencies:**
+   ```
+   uv sync
+   ```
+   This creates a `.venv` folder with all packages from `uv.lock`. You don't need Python installed beforehand: if Python 3.12 is missing, uv downloads it (version pinned in `.python-version`).
+
+4. **Download the models and check the install:**
+   ```
+   uv run python detectors.py
+   ```
+   The first run downloads the GLiNER and Piiranha weights from Hugging Face (a few GB, cached in `~/.cache/huggingface`, not committed) and prints the entities each model finds in a sample sentence. Later runs use the cache. Both the demo app and the API load all models at startup, so without this step their first start is slow.
 
 ## Usage
 
@@ -72,9 +92,9 @@ uv run python test_api.py
 Models, label mapping, how matching and scoring work, dataset caveats and how to add a model or benchmark: [METHOD.md](METHOD.md).
 
 ## Results
-Entity-level, 14 labels, micro-averaged, IoU 0.5. The headline is F2 (recall weighted double: a missed entity is a leak). "PII vs O" ignores the label and is the closest thing to a leak rate. Details and caveats in [METHOD.md](METHOD.md); every example and error is on the Benchmark page of the demo app.
+Entity-level, 14 labels, micro-averaged, IoU 0.5. The headline is F2 (recall weighted double: a missed entity is a leak). Two views: *detection + label* (strict: the PII must be found and get the right label) and *detection only* ("PII vs O": any PII found counts, the label is ignored, which is the closest thing to a leak rate). The gap between the two is the share of errors that are wrong labels. Details and caveats in [METHOD.md](METHOD.md); every example and error is on the Benchmark page of the demo app.
 
-| Benchmark | Model | Precision | Recall | F2 | PII vs O (F2) |
+| Benchmark | Model | Precision (detection + label) | Recall (detection + label) | F2 (detection + label) | F2 (detection only) |
 |---|---|---|---|---|---|
 | `benchmark` (10 English examples) | GLiNER | 0.89 | 0.89 | **0.89** | 0.96 |
 | `benchmark` | Piiranha | 0.80 | 0.17 | **0.21** | 0.21 |

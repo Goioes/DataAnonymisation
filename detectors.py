@@ -24,6 +24,7 @@ class Entity:
 
 class GlinerDetector:
     MODEL = "gliner-community/gliner_large-v2.5"
+    REVISION = "3d6d1760be1c591069f85f207fced9214df8b15f"  # pinned: the weights the benchmark results were scored with
     THRESHOLD = 0.75  # common default, deliberately not tuned
     # natural-language label wording passed to GLiNER -> our label
     LABELS = {
@@ -46,7 +47,7 @@ class GlinerDetector:
     def __init__(self):
         from gliner import GLiNER  # heavy import, only when the model is first used
 
-        self.model = GLiNER.from_pretrained(self.MODEL, load_tokenizer=True)
+        self.model = GLiNER.from_pretrained(self.MODEL, revision=self.REVISION, load_tokenizer=True)
 
     def detect(self, text):
         spans = self.model.predict_entities(text, list(self.LABELS), threshold=self.THRESHOLD)
@@ -55,6 +56,7 @@ class GlinerDetector:
 
 class PiiranhaDetector:
     MODEL = "iiiorg/piiranha-v1-detect-personal-information"
+    REVISION = "255acde67a2f34cf452eb42e365b24d2957352fc"
     # source label -> our label; anything else is dropped
     LABELS = {
         "GIVENNAME": "PERSON", "SURNAME": "PERSON",
@@ -71,7 +73,7 @@ class PiiranhaDetector:
     def __init__(self):
         from transformers import pipeline
 
-        self.ner = pipeline("token-classification", model=self.MODEL, aggregation_strategy="simple")
+        self.ner = pipeline("token-classification", model=self.MODEL, revision=self.REVISION, aggregation_strategy="simple")
 
     def detect(self, text):
         spans = []  # [start, end, label]
