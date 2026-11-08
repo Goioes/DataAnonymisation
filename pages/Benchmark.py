@@ -10,7 +10,7 @@ from anonymize import anonymize
 from detectors import Entity
 from evaluate import IOU_THRESHOLD
 
-EXTRA = {"USERNAME", "PASSWORD"}  # labels beyond the assignment (SCOPING.md section 3)
+EXTRA = {"USERNAME", "PASSWORD"}  # labels beyond the assignment
 files = sorted((Path(__file__).resolve().parent.parent / "results").glob("*/*.json"))
 
 st.title("Benchmark")

@@ -19,7 +19,7 @@ from detectors import ALL_LABELS, DETECTORS, Entity, get_detector
 DATA = Path("Data")
 RESULTS = Path("results")
 IOU_THRESHOLD = 0.5
-# Language-neutral on purpose (SCOPING.md section 7): whitespace and punctuation only. Not the Presidio
+# Language-neutral on purpose: whitespace and punctuation only. Not the Presidio
 # default, which strips English words (and "de") and so is lenient in a different way per language.
 SKIP_WORDS = [""] + list(string.punctuation + "«»“”‘’„‚–—…¿¡")
 PLACEHOLDER = re.compile(r"<([A-Z_]+)>")

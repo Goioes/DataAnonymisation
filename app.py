@@ -15,6 +15,10 @@ def load_examples():
 
 examples = load_examples()
 
+with st.spinner("Loading models (first start only)..."):
+    for name in DETECTORS:  # eager load; get_detector is cached, so reruns are instant
+        get_detector(name)
+
 st.title("Data anonymization")
 
 row = st.selectbox("Example", range(len(examples)), format_func=lambda i: f"{i + 1}. {examples[i][:70]}...")
@@ -23,7 +27,7 @@ text = st.text_area("Text", examples[row], key=f"text_{row}", height=150)
 model = st.selectbox("Model", list(DETECTORS))
 
 if st.button("Anonymize"):
-    with st.spinner(f"Running {model} (the first run loads the model)..."):
+    with st.spinner(f"Running {model}..."):
         entities = get_detector(model).detect(text)
     st.subheader("Anonymized text")
     st.text(anonymize(text, entities))  # st.text: markdown would swallow the <LABEL> placeholders

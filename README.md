@@ -1,6 +1,6 @@
 # Data Anonymization
 
-Extract sensitive entities from text with pre-trained NER models (GLiNER, Piiranha), anonymize them with `<LABEL>` placeholders, and benchmark both models on `Data/benchmark.csv`. Scope and decisions: [SCOPING.md](SCOPING.md).
+Extract sensitive entities from text with pre-trained NER models (GLiNER, Piiranha), anonymize them with `<LABEL>` placeholders, and benchmark both models on the labelled datasets in `Data/`.
 
 ## Setup
 Requires [uv](https://docs.astral.sh/uv/) and Python >= 3.12.
@@ -9,34 +9,114 @@ Requires [uv](https://docs.astral.sh/uv/) and Python >= 3.12.
 uv sync
 ```
 
-Model weights are downloaded from Hugging Face on first run (not committed).
+Model weights are downloaded from Hugging Face on first run (not committed). Both the demo app and the API load all models at startup, so the first start takes a while.
+
+On Windows set `PYTHONUTF8=1` before running Python.
 
 ## Usage
-Demo app (pick an example or paste text, choose a model, click Anonymize):
+
+### Demo app
+Pick an example or paste text, choose a model, click Anonymize. A second page shows the benchmark results.
 
 ```
 uv run streamlit run app.py
 ```
 
-Command-line checks (default sentence, or pass your own; set `PYTHONUTF8=1` on Windows):
+### API
+Start the server:
+
+```
+uv run uvicorn api:app
+```
+
+Endpoints: `GET /models` and `POST /anonymize` (`model` is optional and defaults to `GLiNER`; `text` is 1 to 1000 characters, otherwise 422). Interactive docs, where you can try requests in the browser: http://127.0.0.1:8000/docs
+
+PowerShell:
+
+```powershell
+irm http://127.0.0.1:8000/anonymize -Method Post -ContentType application/json -Body '{"text": "Tim Cook is the CEO of Apple and lives in Cupertino.", "model": "GLiNER"}'
+```
+
+curl:
+
+```
+curl -X POST http://127.0.0.1:8000/anonymize -H "Content-Type: application/json" -d '{"text": "Tim Cook is the CEO of Apple and lives in Cupertino.", "model": "GLiNER"}'
+```
+
+Response: `{"anonymized_text": "...", "entities": [{"text", "label", "start", "end"}]}`.
+
+### Benchmark
+```
+uv run python evaluate.py
+```
+
+Shows a menu to choose benchmarks (every `Data/*.csv`) and models, each with an "all" option. Results are written to `results/<benchmark>/<model>.json` and shown on the Benchmark page of the demo app.
+
+### Command-line checks
+Default sentence, or pass your own:
 
 ```
 uv run python detectors.py "sentence"   # entities per model
 uv run python anonymize.py "sentence"   # anonymized text per model
 ```
 
-_TODO: benchmark script, API._
+### Tests
+```
+uv run python test_evaluate.py
+uv run python test_api.py
+```
 
-**Known limitation:** there is no length handling yet. Text beyond a model's token limit may be left unprocessed, so the "anonymized" output can still contain sensitive data.
+**Known limitation:** there is no length handling yet. Text beyond a model's token limit may be left unprocessed, so the "anonymized" output can still contain sensitive data. The API therefore rejects texts over 1000 characters.
 
 ## Method
-_TODO: models, label mapping, matching (presidio-evaluator, IoU 0.5, F2)._
+Models, label mapping, how matching and scoring work, dataset caveats and how to add a model or benchmark: [METHOD.md](METHOD.md).
 
 ## Results
-_TODO: per-label table._
+Entity-level, 14 labels, micro-averaged, IoU 0.5. The headline is F2 (recall weighted double: a missed entity is a leak). "PII vs O" ignores the label and is the closest thing to a leak rate. Details and caveats in [METHOD.md](METHOD.md); every example and error is on the Benchmark page of the demo app.
 
-## Dataset caveats
-_TODO: see SCOPING.md section 7._
+| Benchmark | Model | Precision | Recall | F2 | PII vs O (F2) |
+|---|---|---|---|---|---|
+| `benchmark` (10 English examples) | GLiNER | 0.89 | 0.89 | **0.89** | 0.96 |
+| `benchmark` | Piiranha | 0.80 | 0.17 | **0.21** | 0.21 |
+| `benchmark_extra` (10 FR/NL/EN examples) | GLiNER | 0.89 | 0.89 | **0.89** | 0.94 |
+| `benchmark_extra` | Piiranha | 0.85 | 0.32 | **0.37** | 0.39 |
+
+Per label on `benchmark` (P / R / F2). Piiranha has no ORG, JOB, AMOUNT, UNIVERSITY or URL label, so those score 0 by construction. IBAN, SSN, USERNAME and PASSWORD have no gold examples in this benchmark and are left out (GLiNER produced one false USERNAME).
+
+| Label | Support | GLiNER | Piiranha |
+|---|---|---|---|
+| PERSON | 7 | 1.00 / 1.00 / 1.00 | 0.00 / 0.00 / 0.00 |
+| ORG | 8 | 1.00 / 1.00 / 1.00 | 0.00 / 0.00 / 0.00 |
+| JOB | 2 | 0.50 / 1.00 / 0.83 | 0.00 / 0.00 / 0.00 |
+| EMAIL_ADDRESS | 1 | 0.00 / 0.00 / 0.00 | 1.00 / 1.00 / 1.00 |
+| LOCATION | 15 | 0.93 / 0.87 / 0.88 | 0.75 / 0.40 / 0.44 |
+| AMOUNT | 2 | 1.00 / 1.00 / 1.00 | 0.00 / 0.00 / 0.00 |
+| DATE_TIME | 8 | 1.00 / 0.75 / 0.79 | 0.00 / 0.00 / 0.00 |
+| UNIVERSITY | 1 | 1.00 / 1.00 / 1.00 | 0.00 / 0.00 / 0.00 |
+| PHONE_NUMBER | 1 | 0.50 / 1.00 / 0.83 | 1.00 / 1.00 / 1.00 |
+| URL | 1 | 1.00 / 1.00 / 1.00 | 0.00 / 0.00 / 0.00 |
+
+Per label on `benchmark_extra` (P / R / F2):
+
+| Label | Support | GLiNER | Piiranha |
+|---|---|---|---|
+| PERSON | 10 | 1.00 / 1.00 / 1.00 | 1.00 / 0.70 / 0.74 |
+| ORG | 8 | 1.00 / 0.88 / 0.90 | 0.00 / 0.00 / 0.00 |
+| JOB | 6 | 0.86 / 1.00 / 0.97 | 0.00 / 0.00 / 0.00 |
+| EMAIL_ADDRESS | 4 | 1.00 / 1.00 / 1.00 | 1.00 / 0.25 / 0.29 |
+| LOCATION | 6 | 0.86 / 1.00 / 0.97 | 0.71 / 0.83 / 0.81 |
+| AMOUNT | 5 | 1.00 / 1.00 / 1.00 | 0.00 / 0.00 / 0.00 |
+| DATE_TIME | 13 | 0.91 / 0.77 / 0.79 | 0.00 / 0.00 / 0.00 |
+| UNIVERSITY | 3 | 1.00 / 1.00 / 1.00 | 0.00 / 0.00 / 0.00 |
+| PHONE_NUMBER | 3 | 0.60 / 1.00 / 0.88 | 1.00 / 1.00 / 1.00 |
+| URL | 3 | 1.00 / 0.67 / 0.71 | 0.00 / 0.00 / 0.00 |
+| IBAN | 3 | 0.67 / 0.67 / 0.67 | 0.00 / 0.00 / 0.00 |
+| SSN | 3 | 1.00 / 0.33 / 0.38 | 1.00 / 1.00 / 1.00 |
+| USERNAME | 3 | 0.75 / 1.00 / 0.94 | 0.60 / 1.00 / 0.88 |
+| PASSWORD | 2 | 0.67 / 1.00 / 0.91 | 1.00 / 0.50 / 0.56 |
+
+Both benchmarks are tiny (support 1 to 15 per label), so per-label scores are anecdotal. `benchmark` also has labelling inconsistencies (see METHOD.md).
 
 ## Licences
-_TODO: Piiranha (CC-BY-NC-ND 4.0, non-commercial), GLiNER `gliner_large-v2.5` (Apache-2.0); verify Piiranha on its model card._
+- GLiNER `gliner_large-v2.5`: Apache-2.0.
+- Piiranha: CC-BY-NC-ND 4.0 (attribution, non-commercial only, no redistributing modified weights), so this project is for benchmark and demo use only, not cleared for production.
