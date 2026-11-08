@@ -12,7 +12,22 @@ uv sync
 Model weights are downloaded from Hugging Face on first run (not committed).
 
 ## Usage
-_TODO: demo app, benchmark script, API._
+Demo app (pick an example or paste text, choose a model, click Anonymize):
+
+```
+uv run streamlit run app.py
+```
+
+Command-line checks (default sentence, or pass your own; set `PYTHONUTF8=1` on Windows):
+
+```
+uv run python detectors.py "sentence"   # entities per model
+uv run python anonymize.py "sentence"   # anonymized text per model
+```
+
+_TODO: benchmark script, API._
+
+**Known limitation:** there is no length handling yet. Text beyond a model's token limit may be left unprocessed, so the "anonymized" output can still contain sensitive data.
 
 ## Method
 _TODO: models, label mapping, matching (presidio-evaluator, IoU 0.5, F2)._
@@ -24,4 +39,4 @@ _TODO: per-label table._
 _TODO: see SCOPING.md section 7._
 
 ## Licences
-_TODO: Piiranha (CC-BY-NC-ND 4.0, non-commercial), GLiNER multi (Apache-2.0); verify on model cards._
+_TODO: Piiranha (CC-BY-NC-ND 4.0, non-commercial), GLiNER `gliner_large-v2.5` (Apache-2.0); verify Piiranha on its model card._
