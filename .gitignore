@@ -1,0 +1,18 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+.pytest_cache/
+
+# Editor
+.vscode/
+
+# Assignment brief (not for the public repo)
+instructions.docx

@@ -1,0 +1,16 @@
+[project]
+name = "dataanonymization"
+version = "0.1.0"
+description = "Anonymize sensitive entities in text with pre-trained NER models (GLiNER, Piiranha) and benchmark them."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.162.2",
+    "gliner>=0.2.30",
+    "pandas>=3.1.1",
+    "presidio-evaluator>=0.3.2",
+    "streamlit>=1.67.0",
+    "torch>=2.15.0",
+    "transformers>=5.22.2",
+    "uvicorn>=0.54.0",
+]
